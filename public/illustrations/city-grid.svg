@@ -1,0 +1,22 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="900" fill="#0B1A3A"/>
+  <g opacity="0.65">
+    <path d="M0 900L320 240L540 900H0Z" fill="#10264E"/>
+    <path d="M320 900L640 120L920 900H320Z" fill="#142D58"/>
+    <path d="M740 900L980 180L1250 900H740Z" fill="#12305E"/>
+    <path d="M1090 900L1320 90L1600 900H1090Z" fill="#1A3B6B"/>
+  </g>
+  <g opacity="0.28" stroke="#7FA3D8" stroke-width="2">
+    <path d="M96 360H510"/><path d="M128 430H526"/><path d="M142 500H548"/><path d="M166 570H566"/><path d="M198 640H586"/>
+    <path d="M456 260H836"/><path d="M434 340H866"/><path d="M412 420H892"/><path d="M388 500H916"/><path d="M356 580H936"/><path d="M334 660H956"/>
+    <path d="M812 300H1188"/><path d="M790 380H1210"/><path d="M768 460H1238"/><path d="M740 540H1260"/><path d="M716 620H1286"/>
+    <path d="M1162 250H1506"/><path d="M1140 330H1528"/><path d="M1118 410H1548"/><path d="M1090 490H1574"/><path d="M1066 570H1598"/><path d="M1040 650H1600"/>
+  </g>
+  <rect width="1600" height="900" fill="url(#overlay)"/>
+  <defs>
+    <linearGradient id="overlay" x1="800" y1="0" x2="800" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0A1733" stop-opacity="0.38"/>
+      <stop offset="1" stop-color="#08132A" stop-opacity="0.84"/>
+    </linearGradient>
+  </defs>
+</svg>

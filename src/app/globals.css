@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #f2f4f8;
+  --surface: #ffffff;
+  --text: #1d2942;
+  --muted: #5f6d85;
+  --navy: #11284c;
+  --navy-strong: #0b1f3e;
+  --cyan: #17a7ff;
+  --orange: #ff7a1a;
+  --line: #d7dde8;
+  --danger: #c81f46;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+  background: var(--bg);
+}
+
+.card {
+  @apply rounded-xl border p-5;
+  border-color: var(--line);
+  background: var(--surface);
+  box-shadow: 0 10px 30px -24px rgba(10, 23, 51, 0.45);
+}
+
+.card-strong {
+  @apply rounded-xl border p-6;
+  border-color: #b7c6dd;
+  background: linear-gradient(180deg, #173861 0%, #0d2649 100%);
+  box-shadow: 0 22px 38px -26px rgba(10, 23, 51, 0.75);
+}
+
+.input {
+  @apply w-full rounded-md border bg-white px-3.5 py-2.5 text-sm outline-none transition;
+  border-color: var(--line);
+}
+
+.input:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 4px rgba(23, 167, 255, 0.14);
+}
+
+.label {
+  @apply mb-1.5 block text-xs font-semibold uppercase tracking-[0.09em];
+  color: #3f4e66;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center rounded-md px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.09em] transition;
+}
+
+.btn-primary {
+  background: var(--orange);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #f06f11;
+}
+
+.btn-secondary {
+  border: 1px solid #bcc7d8;
+  background: #fff;
+  color: #20324f;
+}
+
+.btn-secondary:hover {
+  background: #f6f8fb;
+}
+
+.badge {
+  @apply inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.1em];
+  background: #e9f5ff;
+  color: #1867a6;
+  border: 1px solid #bddbf4;
+}
+
+.badge-inverse {
+  @apply inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.1em];
+  background: rgba(23, 167, 255, 0.15);
+  color: #c2e7ff;
+  border: 1px solid rgba(23, 167, 255, 0.4);
+}
+
+.page-title {
+  @apply text-4xl font-semibold tracking-tight;
+  color: var(--navy);
+}
+
+.page-subtitle {
+  @apply mt-1 text-sm;
+  color: var(--muted);
+}
+
+.kicker {
+  @apply text-xs font-semibold uppercase tracking-[0.2em];
+  color: var(--orange);
+}
+
+.aurora::before,
+.aurora::after {
+  display: none;
+}

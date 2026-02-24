@@ -1,0 +1,202 @@
+[
+  {
+    "key": "feedback-sbi",
+    "category": "Feedback",
+    "title": "SBI-Feedback in 10 Minuten",
+    "situation": "Ein Verhalten soll konkret rückgemeldet werden.",
+    "goal": "Klares, nicht-angreifendes Feedback geben.",
+    "questions": ["Was ist die beobachtbare Situation?", "Welches Verhalten war sichtbar?", "Welche Wirkung hatte es?"],
+    "example_phrases": ["In der Besprechung gestern ...", "Ich habe beobachtet, dass ...", "Das führte dazu, dass ..."],
+    "followups": ["In 7 Tagen nach Wirkung fragen", "Nächsten Schritt schriftlich festhalten"]
+  },
+  {
+    "key": "delegation-clarity",
+    "category": "Delegation",
+    "title": "Delegation mit klarer Outcome-Definition",
+    "situation": "Aufgaben werden unklar übergeben.",
+    "goal": "Ownership und Erwartung eindeutig machen.",
+    "questions": ["Was ist das gewünschte Ergebnis?", "Welche Entscheidungshoheit hat die Person?", "Wann ist Done?"],
+    "example_phrases": ["Erfolg bedeutet konkret ...", "Du kannst selbst entscheiden bei ...", "Bitte update mich bis ..."],
+    "followups": ["Midpoint-Check einplanen", "Ergebnis im Teamreview teilen"]
+  },
+  {
+    "key": "conflict-reset",
+    "category": "Konflikt",
+    "title": "Konfliktgespräch deeskalieren",
+    "situation": "Spannung zwischen zwei Teammitgliedern.",
+    "goal": "Arbeitsfähigkeit schnell wiederherstellen.",
+    "questions": ["Was ist aus deiner Sicht passiert?", "Was brauchst du für gute Zusammenarbeit?", "Welche Vereinbarung treffen wir heute?"],
+    "example_phrases": ["Ich möchte beide Perspektiven hören.", "Wir fokussieren auf beobachtbares Verhalten.", "Lassen Sie uns auf eine klare Vereinbarung kommen."],
+    "followups": ["Vereinbarung schriftlich bestätigen", "Review in 14 Tagen"]
+  },
+  {
+    "key": "growth-next-level",
+    "category": "Entwicklung",
+    "title": "Entwicklungsplan Next Level",
+    "situation": "Mitarbeiter:in soll in Verantwortung wachsen.",
+    "goal": "Lernziele und Praxisaufgaben definieren.",
+    "questions": ["Welche Kompetenz ist der nächste Engpass?", "Welche Aufgabe trainiert diese Kompetenz?", "Woran messen wir Fortschritt?"],
+    "example_phrases": ["Der nächste Entwicklungsschritt ist ...", "Du übst das mit Aufgabe ...", "Wir messen Erfolg über ..."],
+    "followups": ["30-Tage Lerncheckpoint", "Peer-Feedback einholen"]
+  },
+  {
+    "key": "meeting-focus",
+    "category": "Delegation",
+    "title": "Meeting auf Entscheidungen trimmen",
+    "situation": "Meetings dauern zu lange ohne Ergebnis.",
+    "goal": "Entscheidungsfokus etablieren.",
+    "questions": ["Welche Entscheidung ist heute notwendig?", "Welche Optionen liegen auf dem Tisch?", "Wer entscheidet final?"],
+    "example_phrases": ["Unser Ziel heute ist eine Entscheidung zu ...", "Option A/B hat folgende Trade-offs ...", "Entscheidung fällt bis ..."],
+    "followups": ["Decision Log pflegen", "Offene Punkte terminieren"]
+  },
+  {
+    "key": "recognition-ritual",
+    "category": "Feedback",
+    "title": "Anerkennung mit Wirkung",
+    "situation": "Leistung wird zu selten sichtbar gewürdigt.",
+    "goal": "Motivation über präzise Anerkennung steigern.",
+    "questions": ["Welche konkrete Leistung ist hervorzuheben?", "Warum war sie relevant?", "Wie knüpfen wir daran an?"],
+    "example_phrases": ["Stark war besonders ...", "Das hat dem Team geholfen, weil ...", "Nimm dieses Muster in Aufgabe X mit."],
+    "followups": ["Anerkennung im Teamkanal teilen", "Nächste Stretch-Aufgabe anbieten"]
+  },
+  {
+    "key": "hard-message",
+    "category": "Konflikt",
+    "title": "Schwierige Botschaft klar senden",
+    "situation": "Unbequeme Entscheidung muss kommuniziert werden.",
+    "goal": "Klarheit ohne unnötige Eskalation.",
+    "questions": ["Was ist die Kernbotschaft in einem Satz?", "Welche Gründe sind sachlich relevant?", "Welche nächste Handlung erwartet du?"],
+    "example_phrases": ["Ich möchte transparent sein: ...", "Der Hauptgrund ist ...", "Ab heute gilt daher ..."],
+    "followups": ["Q&A Slot anbieten", "Wirkung nach 1 Woche prüfen"]
+  },
+  {
+    "key": "career-conversation",
+    "category": "Entwicklung",
+    "title": "Karrieregespräch strukturiert führen",
+    "situation": "Mitarbeiter:in fragt nach Entwicklungspfad.",
+    "goal": "Realistische, motivierende Perspektive geben.",
+    "questions": ["Welche Rolle ist Zielbild?", "Welche Fähigkeiten fehlen noch?", "Welche 90-Tage Schritte sind realistisch?"],
+    "example_phrases": ["Dein Zielbild ist nachvollziehbar ...", "Für den nächsten Schritt brauchst du ...", "Wir starten mit ..."],
+    "followups": ["90-Tage Plan dokumentieren", "Monatlichen Check setzen"]
+  },
+  {
+    "key": "priority-triad",
+    "category": "Delegation",
+    "title": "Top-3 Priorisierung im Team",
+    "situation": "Zu viele parallele Aufgaben.",
+    "goal": "Maximal drei echte Prioritäten setzen.",
+    "questions": ["Welche Aufgabe zahlt direkt aufs Wochenziel ein?", "Was kann pausieren?", "Welche Abhängigkeit blockiert aktuell?"],
+    "example_phrases": ["Unsere Top 3 für diese Woche sind ...", "Alles andere ist bewusst nachrangig.", "Blocker X lösen wir bis ..."],
+    "followups": ["Täglicher 10-Minuten Check", "Freitag Review mit Lessons Learned"]
+  },
+  {
+    "key": "handover-clean",
+    "category": "Delegation",
+    "title": "Saubere Übergabe",
+    "situation": "Verantwortungswechsel läuft holprig.",
+    "goal": "Risiken beim Übergang minimieren.",
+    "questions": ["Welche Infos sind kritisch?", "Was ist offen und warum?", "Wer ist Ansprechpartner:in ab heute?"],
+    "example_phrases": ["Für die Übergabe sind diese Punkte kritisch ...", "Offen ist aktuell ...", "Ab jetzt ist X First Contact."],
+    "followups": ["48h Follow-up", "Dokumentation ergänzen"]
+  },
+  {
+    "key": "expectation-reset",
+    "category": "Feedback",
+    "title": "Erwartungen neu kalibrieren",
+    "situation": "Leistung entspricht nicht Erwartung.",
+    "goal": "Missverständnisse auflösen und Kurs setzen.",
+    "questions": ["Welche Erwartung war unklar?", "Was ist ab sofort konkret anders?", "Wie messen wir Fortschritt?"],
+    "example_phrases": ["Ich sehe eine Lücke bei ...", "Ab jetzt erwarte ich ...", "Wir prüfen Fortschritt an ..."],
+    "followups": ["Check in 5 Arbeitstagen", "Ressourcenbedarf klären"]
+  },
+  {
+    "key": "listening-loop",
+    "category": "Konflikt",
+    "title": "Aktives Zuhören im Streit",
+    "situation": "Gespräche drehen sich im Kreis.",
+    "goal": "Verstehen vor Lösung sichern.",
+    "questions": ["Habe ich dich richtig verstanden, dass ...?", "Was ist dir am wichtigsten?", "Was wäre ein akzeptabler erster Schritt?"],
+    "example_phrases": ["Ich wiederhole kurz, was ich gehört habe ...", "Der Kernpunkt für dich ist ...", "Als ersten Schritt vereinbaren wir ..."],
+    "followups": ["Gemeinsame Notiz teilen", "Wirkung nach 1 Woche prüfen"]
+  },
+  {
+    "key": "retrospective-lite",
+    "category": "Entwicklung",
+    "title": "Mini-Retro nach Sprint",
+    "situation": "Nach Projektschritt fehlen Lernimpulse.",
+    "goal": "Lernen schnell operationalisieren.",
+    "questions": ["Was lief gut?", "Was bremste uns?", "Was ändern wir konkret ab morgen?"],
+    "example_phrases": ["Beibehalten sollten wir ...", "Stoppen sollten wir ...", "Neu ausprobieren werden wir ..."],
+    "followups": ["Eine Verbesserung priorisieren", "Owner + Deadline setzen"]
+  },
+  {
+    "key": "trust-rebuild",
+    "category": "Konflikt",
+    "title": "Vertrauen wieder aufbauen",
+    "situation": "Nach Fehlern ist Vertrauen angeschlagen.",
+    "goal": "Verlässlichkeit durch transparente Schritte erhöhen.",
+    "questions": ["Was braucht es, um Vertrauen wiederherzustellen?", "Welche Verhaltensänderung ist sichtbar?", "Wie prüfen wir Fortschritt?"],
+    "example_phrases": ["Ich möchte Vertrauen aktiv wieder aufbauen ...", "Dafür verpflichte ich mich zu ...", "Wir messen Fortschritt so ..."],
+    "followups": ["Wöchentliche Transparenzupdates", "30-Tage Review"]
+  },
+  {
+    "key": "coaching-question-set",
+    "category": "Entwicklung",
+    "title": "Coaching statt Micromanagement",
+    "situation": "Lead gibt zu viele direkte Lösungen vor.",
+    "goal": "Eigenständiges Denken fördern.",
+    "questions": ["Welche Optionen siehst du?", "Welche Risiken hat jede Option?", "Welche Empfehlung gibst du?"],
+    "example_phrases": ["Was würdest du vorschlagen?", "Welche Annahme steckt dahinter?", "Welche Entscheidung triffst du und warum?"],
+    "followups": ["Entscheidungsqualität reflektieren", "Mehr Entscheidungsspielraum geben"]
+  },
+  {
+    "key": "alignment-remote",
+    "category": "Delegation",
+    "title": "Remote Alignment sichern",
+    "situation": "Hybrid-Team mit Kommunikationslücken.",
+    "goal": "Transparente Übergaben und Status sicherstellen.",
+    "questions": ["Welche Updates sind asynchron Pflicht?", "Welche Themen brauchen Synch-Meeting?", "Welche SLA gilt für Rückmeldungen?"],
+    "example_phrases": ["Wir dokumentieren Entscheidungen immer in ...", "Statusupdate bis 16:00 im Thread ...", "Bei Blockern gilt Eskalation nach ..."],
+    "followups": ["Teamregelwerk veröffentlichen", "2 Wochen Wirksamkeit prüfen"]
+  },
+  {
+    "key": "feedback-upward",
+    "category": "Feedback",
+    "title": "Feedback an Führungskraft geben",
+    "situation": "Mitarbeiter soll konstruktiv nach oben spiegeln.",
+    "goal": "Sicherer Rahmen für upward feedback.",
+    "questions": ["Was ist beobachtet statt bewertet?", "Welche Wirkung entstand?", "Welche Bitte ist konkret?"],
+    "example_phrases": ["Mir ist aufgefallen ...", "Das hatte für mich die Wirkung ...", "Ich wünsche mir künftig ..."],
+    "followups": ["Rückmeldung dokumentieren", "Follow-up Termin vereinbaren"]
+  },
+  {
+    "key": "underperformance-plan",
+    "category": "Feedback",
+    "title": "Leistungsverbesserungsplan light",
+    "situation": "Wiederholt unter Zielniveau.",
+    "goal": "Klare Erwartungen und Unterstützung kombinieren.",
+    "questions": ["Welche Lücke ist konkret messbar?", "Welche Unterstützung ist verfügbar?", "Welcher Review-Zeitpunkt gilt?"],
+    "example_phrases": ["Der aktuelle Stand ist ...", "Ziel bis Datum X ist ...", "Ich unterstütze mit ..."],
+    "followups": ["Wöchentliches Fortschrittsgespräch", "Dokumentation aktualisieren"]
+  },
+  {
+    "key": "goal-cascade",
+    "category": "Delegation",
+    "title": "Ziele auf Teamebene herunterbrechen",
+    "situation": "Strategische Ziele bleiben abstrakt.",
+    "goal": "Konkrete Teamziele pro Quartal festlegen.",
+    "questions": ["Welcher KPI beeinflusst das Team direkt?", "Welche zwei Initiativen zahlen am meisten ein?", "Welche Meilensteine setzen wir?"],
+    "example_phrases": ["Aus Unternehmensziel X folgt für uns ...", "Unsere Initiativen sind ...", "Bis Ende Monat liefern wir ..."],
+    "followups": ["Monatliches KPI Review", "Ressourcen ggf. neu priorisieren"]
+  },
+  {
+    "key": "difficult-no",
+    "category": "Konflikt",
+    "title": "Klares Nein ohne Beziehungsschaden",
+    "situation": "Anfrage passt nicht zur Priorität.",
+    "goal": "Grenzen setzen und Alternativen aufzeigen.",
+    "questions": ["Warum passt es nicht zur Priorität?", "Welche Alternative ist möglich?", "Wann kann neu bewertet werden?"],
+    "example_phrases": ["Aktuell kann ich das nicht zusagen, weil ...", "Was ich anbieten kann ist ...", "Wir prüfen das erneut am ..."],
+    "followups": ["Entscheidung transparent dokumentieren", "Stakeholder informieren"]
+  }
+]
