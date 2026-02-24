@@ -36,21 +36,30 @@ export async function POST(request: Request) {
 
   try {
     const profile = await generateTeamVoiceProfile(parsed.data);
+    let persisted = false;
+    let warning: string | undefined;
 
     if (!demoMode && auth && parsed.data.team_member_id) {
-      await saveTeamVoiceProfile({
-        supabase: auth.supabase,
-        userId: auth.user.id,
-        teamMemberId: parsed.data.team_member_id,
-        profile,
-        sourceAnswers: parsed.data.answers,
-      });
+      try {
+        await saveTeamVoiceProfile({
+          supabase: auth.supabase,
+          userId: auth.user.id,
+          teamMemberId: parsed.data.team_member_id,
+          profile,
+          sourceAnswers: parsed.data.answers,
+        });
+        persisted = true;
+      } catch {
+        warning =
+          "Profil wurde erstellt, konnte aber nicht gespeichert werden. Bitte DB-Migration prüfen.";
+      }
     }
 
     return NextResponse.json(
       {
         profile,
-        persisted: Boolean(!demoMode && auth && parsed.data.team_member_id),
+        persisted,
+        warning,
       },
       { status: 200 },
     );

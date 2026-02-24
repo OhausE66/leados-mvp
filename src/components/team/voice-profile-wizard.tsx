@@ -24,7 +24,9 @@ type SpeechRecognitionConstructor = new () => {
   lang: string;
   interimResults: boolean;
   continuous: boolean;
-  onresult: ((event: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
+  onresult:
+    | ((event: { results: ArrayLike<ArrayLike<{ transcript: string; isFinal?: boolean }>> }) => void)
+    | null;
   onend: (() => void) | null;
   onerror: (() => void) | null;
   start: () => void;
@@ -35,7 +37,9 @@ type SpeechRecognitionInstance = {
   lang: string;
   interimResults: boolean;
   continuous: boolean;
-  onresult: ((event: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
+  onresult:
+    | ((event: { results: ArrayLike<ArrayLike<{ transcript: string; isFinal?: boolean }>> }) => void)
+    | null;
   onend: (() => void) | null;
   onerror: (() => void) | null;
   start: () => void;
@@ -75,6 +79,7 @@ export function VoiceProfileWizard({
   const [error, setError] = useState<string | null>(null);
 
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
+  const transcriptBaseRef = useRef<string>("");
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const rafIdRef = useRef<number | null>(null);
@@ -193,21 +198,35 @@ export function VoiceProfileWizard({
 
     const recognition = new SpeechRecognition();
     recognition.lang = "de-DE";
-    recognition.continuous = false;
-    recognition.interimResults = false;
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    transcriptBaseRef.current = answers[questionIndex].trim();
 
     recognition.onresult = (event) => {
-      const transcript = Array.from(event.results)
-        .map((result) => result[0]?.transcript ?? "")
-        .join(" ")
-        .trim();
-      if (!transcript) {
-        return;
-      }
+      let finalTranscript = "";
+      let interimTranscript = "";
+
+      Array.from(event.results).forEach((result) => {
+        const chunk = result[0]?.transcript?.trim() ?? "";
+        if (!chunk) {
+          return;
+        }
+
+        if ((result as { isFinal?: boolean }).isFinal) {
+          finalTranscript += `${chunk} `;
+        } else {
+          interimTranscript += `${chunk} `;
+        }
+      });
+
+      const nextBase = `${transcriptBaseRef.current} ${finalTranscript}`.trim();
+      const nextValue = `${nextBase} ${interimTranscript}`.trim();
+
+      transcriptBaseRef.current = nextBase;
 
       setAnswers((prev) => {
         const next = [...prev];
-        next[questionIndex] = `${prev[questionIndex]} ${transcript}`.trim();
+        next[questionIndex] = nextValue;
         return next;
       });
     };
@@ -282,7 +301,7 @@ export function VoiceProfileWizard({
     });
 
     const body = (await response.json()) as
-      | { profile: TeamVoiceProfile; persisted: boolean }
+      | { profile: TeamVoiceProfile; persisted: boolean; warning?: string }
       | { error?: { message?: string; code?: string } };
 
     if (!response.ok || !("profile" in body)) {
@@ -302,6 +321,9 @@ export function VoiceProfileWizard({
     setProfile(body.profile);
     onProfileGenerated(body.profile);
     setSubmitting(false);
+    if ("warning" in body && body.warning) {
+      setError(body.warning);
+    }
 
     const {
       data: { user },
