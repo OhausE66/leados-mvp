@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import type { LeadershipOutput } from "@/lib/schemas";
+import type { LeadershipOutput, TeamVoiceProfile } from "@/lib/schemas";
 
 export async function saveDailyBriefing(params: {
   supabase: SupabaseClient;
@@ -37,5 +37,24 @@ export async function saveOneOnOne(params: {
 
   if (error) {
     throw new Error(`Failed to save one-on-one output: ${error.message}`);
+  }
+}
+
+export async function saveTeamVoiceProfile(params: {
+  supabase: SupabaseClient;
+  userId: string;
+  teamMemberId: string;
+  profile: TeamVoiceProfile;
+  sourceAnswers: Array<{ question: string; answer: string }>;
+}) {
+  const { error } = await params.supabase.from("team_member_profiles").insert({
+    user_id: params.userId,
+    team_member_id: params.teamMemberId,
+    profile_json: params.profile,
+    source_answers: params.sourceAnswers,
+  });
+
+  if (error) {
+    throw new Error(`Failed to save team voice profile: ${error.message}`);
   }
 }

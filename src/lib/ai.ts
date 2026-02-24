@@ -3,8 +3,11 @@ import { z } from "zod";
 import {
   aiGenerateInputSchema,
   leadershipOutputSchema,
+  teamVoiceProfileRequestSchema,
+  teamVoiceProfileSchema,
   type AIGenerateInput,
   type LeadershipOutput,
+  type TeamVoiceProfile,
 } from "@/lib/schemas";
 import { getAiConfig } from "@/lib/env";
 
@@ -278,4 +281,77 @@ export function formatAIError(error: unknown): {
     message: "Unexpected AI service error",
     details: String(error),
   };
+}
+
+export async function generateTeamVoiceProfile(rawInput: unknown): Promise<TeamVoiceProfile> {
+  const parsed = teamVoiceProfileRequestSchema.safeParse(rawInput);
+  if (!parsed.success) {
+    throw new AIServiceError("Invalid voice profile input", "INVALID_INPUT", {
+      issues: parsed.error.issues,
+    });
+  }
+
+  const { team_member_name: teamMemberName, answers } = parsed.data;
+  const answerText = answers.map((entry) => entry.answer).join(" ").toLowerCase();
+
+  const profile: TeamVoiceProfile = {
+    summary: `${teamMemberName} zeigt klare Potenziale mit Fokus auf Umsetzung und Kommunikation im Team.`,
+    strengths: [
+      "Hohe Verantwortungsbereitschaft",
+      "Gute fachliche Stabilität in Kernaufgaben",
+      "Bereitschaft zur Zusammenarbeit",
+    ],
+    growth_areas: [
+      "Prioritäten im Tagesgeschäft konsequenter halten",
+      "Früher auf Risiken und Blocker hinweisen",
+    ],
+    motivation_triggers: [
+      "Klare Ziele mit sichtbarem Impact",
+      "Vertrauen und Entscheidungsspielraum",
+    ],
+    stress_signals: [
+      "Zögerliche Kommunikation bei Zielkonflikten",
+      "Wechsel zwischen zu vielen Parallelthemen",
+    ],
+    communication_style: "Direkt und sachlich, bei Druck punktuell zurückhaltend.",
+    feedback_preference: "Konkret, beobachtbar und mit klarer nächster Handlung.",
+    leadership_recommendations: [
+      "Top-3 Prioritäten pro Woche fixieren und sichtbar halten",
+      "Frühe Eskalationsregeln für Blocker vereinbaren",
+      "Kurze wöchentliche Check-ins mit konkreten Commitments nutzen",
+    ],
+    first_1on1_focus: [
+      "Aktuelle Top-2 Ziele und Hindernisse",
+      "Konkreter Supportbedarf durch die Führungskraft",
+      "Messbarer Fortschritt bis zum nächsten Termin",
+    ],
+    confidence: "medium",
+    assumptions: [],
+    clarifying_questions: [],
+  };
+
+  if (answerText.includes("konflikt") || answerText.includes("spannung")) {
+    profile.growth_areas.unshift("Konfliktsituationen proaktiv und strukturiert adressieren");
+    profile.first_1on1_focus.unshift("Aktuelle Konfliktlage und gewünschtes Zielbild klären");
+  }
+
+  if (answerText.includes("motivation") || answerText.includes("antrieb")) {
+    profile.motivation_triggers.unshift("Sichtbare Anerkennung von Fortschritten");
+  }
+
+  if (answers.length < 6) {
+    profile.assumptions.push("Es wurden nur wenige Antworten gegeben; Profil basiert auf begrenztem Kontext.");
+    profile.clarifying_questions.push(
+      "Welche zwei Verhaltensbeispiele aus den letzten 14 Tagen sind für die Entwicklung am wichtigsten?",
+    );
+  }
+
+  const validated = teamVoiceProfileSchema.safeParse(profile);
+  if (!validated.success) {
+    throw new AIServiceError("Generated voice profile failed schema validation", "INVALID_OUTPUT", {
+      issues: validated.error.issues,
+    });
+  }
+
+  return validated.data;
 }

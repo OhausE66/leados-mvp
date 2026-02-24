@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { VoiceProfileWizard } from "@/components/team/voice-profile-wizard";
 
 export type TeamMember = {
   id: string;
@@ -20,13 +21,22 @@ export type Note = {
   created_at: string;
 };
 
+export type TeamProfile = {
+  team_member_id: string;
+  profile_json: {
+    summary?: string;
+  } | null;
+};
+
 export function TeamManager({
   initialTeamMembers,
   initialNotes,
+  initialProfiles,
   demoMode,
 }: {
   initialTeamMembers: TeamMember[];
   initialNotes: Note[];
+  initialProfiles: TeamProfile[];
   demoMode: boolean;
 }) {
   const [teamMembers, setTeamMembers] = useState(initialTeamMembers);
@@ -34,6 +44,8 @@ export function TeamManager({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [memberForm, setMemberForm] = useState({ name: "", role: "", notes_private: "" });
   const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
+  const [profiles, setProfiles] = useState(initialProfiles);
+  const [profileTarget, setProfileTarget] = useState<TeamMember | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -54,6 +66,22 @@ export function TeamManager({
 
     setTeamMembers((memberData ?? []) as TeamMember[]);
     setNotes((noteData ?? []) as Note[]);
+
+    const { data: profileData } = await supabase
+      .from("team_member_profiles")
+      .select("team_member_id, profile_json, created_at")
+      .order("created_at", { ascending: false });
+    const profileMap = new Map<string, TeamProfile>();
+    (profileData ?? []).forEach((entry) => {
+      const key = (entry as { team_member_id: string }).team_member_id;
+      if (!profileMap.has(key)) {
+        profileMap.set(key, {
+          team_member_id: key,
+          profile_json: (entry as { profile_json: { summary?: string } | null }).profile_json,
+        });
+      }
+    });
+    setProfiles(Array.from(profileMap.values()));
   }
 
   async function saveMember(event: React.FormEvent<HTMLFormElement>) {
@@ -187,6 +215,24 @@ export function TeamManager({
 
   return (
     <div className="space-y-5">
+      {profileTarget ? (
+        <VoiceProfileWizard
+          open
+          teamMemberId={profileTarget.id}
+          teamMemberName={profileTarget.name}
+          onClose={() => setProfileTarget(null)}
+          onProfileGenerated={(profile) => {
+            setProfiles((prev) => [
+              {
+                team_member_id: profileTarget.id,
+                profile_json: { summary: profile.summary },
+              },
+              ...prev.filter((entry) => entry.team_member_id !== profileTarget.id),
+            ]);
+          }}
+        />
+      ) : null}
+
       {demoMode ? (
         <div className="card border-teal-200 bg-teal-50 text-teal-900">
           Demo Mode aktiv: Teamdaten bleiben nur lokal im Browser.
@@ -258,10 +304,28 @@ export function TeamManager({
                     <h3 className="text-lg font-semibold text-slate-900">{member.name}</h3>
                     <p className="text-sm text-slate-600">{member.role}</p>
                   </div>
-                  <button type="button" className="btn btn-secondary" onClick={() => beginEdit(member)}>
-                    Bearbeiten
-                  </button>
+                  <div className="flex gap-2">
+                    <button type="button" className="btn btn-secondary" onClick={() => beginEdit(member)}>
+                      Bearbeiten
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() => setProfileTarget(member)}
+                    >
+                      Sprachprofil
+                    </button>
+                  </div>
                 </div>
+
+                {profiles.find((entry) => entry.team_member_id === member.id)?.profile_json?.summary ? (
+                  <div className="mt-3 rounded-xl border border-sky-200 bg-sky-50 p-3 text-sm text-sky-900">
+                    <p className="text-xs font-semibold uppercase tracking-[0.08em]">Profil-Zusammenfassung</p>
+                    <p className="mt-1">
+                      {profiles.find((entry) => entry.team_member_id === member.id)?.profile_json?.summary}
+                    </p>
+                  </div>
+                ) : null}
 
                 {member.notes_private ? (
                   <p className="mt-3 rounded-xl border border-teal-100 bg-teal-50/60 p-3 text-sm text-slate-700">

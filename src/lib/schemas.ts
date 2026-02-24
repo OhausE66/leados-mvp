@@ -81,3 +81,32 @@ export const aiGenerateInputSchema = z.discriminatedUnion("kind", [
 ]);
 
 export type AIGenerateInput = z.infer<typeof aiGenerateInputSchema>;
+
+export const voiceAnswerSchema = z.object({
+  question: z.string().min(1),
+  answer: z.string().min(1),
+});
+
+export const teamVoiceProfileRequestSchema = z.object({
+  team_member_id: z.string().min(1).optional(),
+  team_member_name: z.string().min(1),
+  answers: z.array(voiceAnswerSchema).min(3).max(20),
+});
+
+export const teamVoiceProfileSchema = z.object({
+  summary: z.string().min(1),
+  strengths: z.array(z.string().min(1)).min(1).max(6),
+  growth_areas: z.array(z.string().min(1)).min(1).max(6),
+  motivation_triggers: z.array(z.string().min(1)).max(6),
+  stress_signals: z.array(z.string().min(1)).max(6),
+  communication_style: z.string().min(1),
+  feedback_preference: z.string().min(1),
+  leadership_recommendations: z.array(z.string().min(1)).min(1).max(6),
+  first_1on1_focus: z.array(z.string().min(1)).min(1).max(5),
+  confidence: z.enum(["low", "medium", "high"]),
+  assumptions: z.array(z.string().min(1)).max(6),
+  clarifying_questions: z.array(z.string().min(1)).max(3),
+});
+
+export type TeamVoiceProfileRequest = z.infer<typeof teamVoiceProfileRequestSchema>;
+export type TeamVoiceProfile = z.infer<typeof teamVoiceProfileSchema>;
