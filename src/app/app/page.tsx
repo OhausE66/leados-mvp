@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import { isDemoMode } from "@/lib/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -44,6 +45,12 @@ function DashboardContent({
               <button className="btn border border-white/35 bg-white/8 text-white hover:bg-white/16">
                 Über LeadOS
               </button>
+              <Link
+                href="/app/example"
+                className="btn border border-[#17a7ff]/55 bg-[#17a7ff]/10 text-[#bde9ff] hover:bg-[#17a7ff]/20"
+              >
+                Beispiel-Dokument
+              </Link>
             </div>
             {demoMode ? (
               <p className="mt-4 text-sm font-medium text-cyan-200">Demo Mode ohne Backend aktiv.</p>

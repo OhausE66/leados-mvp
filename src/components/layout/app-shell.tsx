@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 import { isDemoMode } from "@/lib/env";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
@@ -12,20 +13,38 @@ const navigation = [
   { href: "/app/daily", label: "Daily Briefing" },
   { href: "/app/one-on-one", label: "1:1 Studio" },
   { href: "/app/templates", label: "Templates" },
+  { href: "/app/example", label: "Beispiel-Dokument" },
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const supabase = useMemo(
+    () => (isDemoMode() ? null : createSupabaseBrowserClient()),
+    [],
+  );
+
+  useEffect(() => {
+    if (!supabase) {
+      return;
+    }
+
+    const run = async () => {
+      const { data } = await supabase.auth.getUser();
+      setIsLoggedIn(Boolean(data.user));
+    };
+    void run();
+  }, [supabase]);
 
   async function signOut() {
-    if (isDemoMode()) {
+    if (isDemoMode() || !supabase) {
       router.replace("/");
       return;
     }
 
-    const supabase = createSupabaseBrowserClient();
     await supabase.auth.signOut();
+    setIsLoggedIn(false);
     router.replace("/auth");
   }
 
@@ -58,13 +77,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               })}
             </nav>
 
-            <button
-              type="button"
-              className="rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold uppercase tracking-[0.08em] text-white transition hover:bg-slate-800"
-              onClick={signOut}
-            >
-              {isDemoMode() ? "Startseite" : "Abmelden"}
-            </button>
+            {isLoggedIn ? (
+              <button
+                type="button"
+                className="rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold uppercase tracking-[0.08em] text-white transition hover:bg-slate-800"
+                onClick={signOut}
+              >
+                Abmelden
+              </button>
+            ) : (
+              <Link
+                href={`/auth?next=${encodeURIComponent(pathname)}`}
+                className="rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold uppercase tracking-[0.08em] text-white transition hover:bg-slate-800"
+              >
+                Anmelden
+              </Link>
+            )}
           </div>
         </div>
       </header>

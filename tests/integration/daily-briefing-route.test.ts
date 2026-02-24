@@ -74,8 +74,34 @@ describe("POST /api/ai/daily-briefing", () => {
     expect(saveDailyBriefingMock).toHaveBeenCalledTimes(1);
   });
 
-  it("returns 401 when unauthorized", async () => {
+  it("allows guest generation but skips persistence when unauthorized", async () => {
     requireApiUserMock.mockResolvedValue(null);
+    generateLeadershipOutputsMock.mockResolvedValue({
+      daily_briefing: {
+        top_actions: [
+          {
+            title: "Action",
+            why: "Why",
+            script: "Script",
+            timebox_minutes: 20,
+          },
+        ],
+        watchouts: ["Watchout"],
+      },
+      one_on_one: {
+        agenda: [{ topic: "Topic", goal: "Goal", questions: ["Q1"] }],
+        feedback_script: {
+          opening: "Opening",
+          core: "Core",
+          support: "Support",
+          close: "Close",
+        },
+        followups: [{ owner: "Leader", action: "Act", due_in_days: 2 }],
+      },
+      templates_used: ["t1"],
+      assumptions: [],
+      clarifying_questions: [],
+    });
 
     const { POST } = await import("@/app/api/ai/daily-briefing/route");
     const request = new Request("http://localhost/api/ai/daily-briefing", {
@@ -92,7 +118,8 @@ describe("POST /api/ai/daily-briefing", () => {
     const response = await POST(request);
     const body = await response.json();
 
-    expect(response.status).toBe(401);
-    expect(body.error.code).toBe("UNAUTHORIZED");
+    expect(response.status).toBe(200);
+    expect(body.output.daily_briefing.top_actions).toHaveLength(1);
+    expect(saveDailyBriefingMock).not.toHaveBeenCalled();
   });
 });

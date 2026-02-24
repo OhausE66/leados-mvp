@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
@@ -34,6 +35,7 @@ export function TeamManager({
   const [memberForm, setMemberForm] = useState({ name: "", role: "", notes_private: "" });
   const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const supabase = useMemo(() => (demoMode ? null : createSupabaseBrowserClient()), [demoMode]);
 
@@ -108,7 +110,8 @@ export function TeamManager({
         data: { user },
       } = await supabase!.auth.getUser();
       if (!user) {
-        setError("Bitte neu einloggen.");
+        setError("Bitte anmelden, um das erste Teammitglied zu speichern.");
+        router.push("/auth?next=/app/team");
         return;
       }
 
@@ -152,7 +155,8 @@ export function TeamManager({
       data: { user },
     } = await supabase!.auth.getUser();
     if (!user) {
-      setError("Bitte neu einloggen.");
+      setError("Bitte anmelden, um Notizen zu speichern.");
+      router.push("/auth?next=/app/team");
       return;
     }
 

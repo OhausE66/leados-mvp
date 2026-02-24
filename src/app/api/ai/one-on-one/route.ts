@@ -9,12 +9,6 @@ import { oneOnOneRequestSchema } from "@/lib/schemas";
 export async function POST(request: Request) {
   const demoMode = isDemoMode();
   const auth = demoMode ? null : await requireApiUser();
-  if (!demoMode && !auth) {
-    return NextResponse.json(
-      { error: { code: "UNAUTHORIZED", message: "Authentication required" } },
-      { status: 401 },
-    );
-  }
 
   let payload: unknown;
   try {

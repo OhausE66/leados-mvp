@@ -14,7 +14,16 @@ export default function AuthPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [nextPath, setNextPath] = useState("/app");
   const router = useRouter();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const next = params.get("next");
+    if (next) {
+      setNextPath(next);
+    }
+  }, []);
 
   useEffect(() => {
     const run = async () => {
@@ -24,11 +33,11 @@ export default function AuthPage() {
       const supabase = createSupabaseBrowserClient();
       const { data } = await supabase.auth.getUser();
       if (data.user) {
-        router.replace("/app");
+        router.replace(nextPath);
       }
     };
     void run();
-  }, [router]);
+  }, [nextPath, router]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -50,7 +59,7 @@ export default function AuthPage() {
         if (error) {
           setMessage(error.message);
         } else {
-          router.replace("/app");
+          router.replace(nextPath);
         }
       }
     } catch (error) {
