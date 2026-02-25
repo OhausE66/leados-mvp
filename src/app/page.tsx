@@ -104,6 +104,54 @@ export default async function HomePage() {
 
       <MiniBriefingDemo />
 
+      <section className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+        <article className="card overflow-hidden p-0">
+          <div className="relative">
+            <Image
+              src="/illustrations/leadership-flow.svg"
+              alt="LeadOS Workflow Visual"
+              width={960}
+              height={640}
+              className="h-auto w-full"
+            />
+          </div>
+          <div className="p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">
+              Produkt-Vorschau
+            </p>
+            <h3 className="mt-2 text-xl font-semibold text-[#11284c]">
+              Von Input zu Führungsoutput in einem klaren Flow
+            </h3>
+            <p className="mt-2 text-sm text-slate-700">
+              Dieses Muster zeigt die typische LeadOS-Struktur: Priorisieren, Gespräch vorbereiten
+              und Follow-up verbindlich machen.
+            </p>
+          </div>
+        </article>
+
+        <article className="card overflow-hidden p-0">
+          <div className="relative">
+            <Image
+              src="/illustrations/studio-orbit.svg"
+              alt="1:1 Studio Visual"
+              width={960}
+              height={640}
+              className="h-auto w-full"
+            />
+          </div>
+          <div className="p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">1:1 Fokus</p>
+            <h3 className="mt-2 text-xl font-semibold text-[#11284c]">
+              Gesprächsbausteine im Blick, nächste Schritte direkt klar
+            </h3>
+            <p className="mt-2 text-sm text-slate-700">
+              Agenda, Feedback und Follow-ups entstehen aus einem kompakten Input und bleiben
+              jederzeit nachvollziehbar.
+            </p>
+          </div>
+        </article>
+      </section>
+
       <section className="card">
         <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Vertrauenssignale</p>
         <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -131,6 +179,13 @@ export default async function HomePage() {
 
       <section className="grid gap-4 md:grid-cols-3">
         <article className="card">
+          <Image
+            src="/illustrations/leadership-flow.svg"
+            alt="Daily Briefing Illustration"
+            width={960}
+            height={640}
+            className="mb-3 h-auto w-full rounded-lg border border-slate-200"
+          />
           <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">
             1. Daily Briefing
           </p>
@@ -139,6 +194,13 @@ export default async function HomePage() {
           </p>
         </article>
         <article className="card">
+          <Image
+            src="/illustrations/studio-orbit.svg"
+            alt="1:1 Studio Illustration"
+            width={960}
+            height={640}
+            className="mb-3 h-auto w-full rounded-lg border border-slate-200"
+          />
           <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">
             2. 1:1 Studio
           </p>
@@ -147,6 +209,13 @@ export default async function HomePage() {
           </p>
         </article>
         <article className="card">
+          <Image
+            src="/illustrations/city-grid.svg"
+            alt="Sprachprofil Illustration"
+            width={1600}
+            height={900}
+            className="mb-3 h-auto w-full rounded-lg border border-slate-200"
+          />
           <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">
             3. Sprachprofil
           </p>
