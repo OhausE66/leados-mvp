@@ -9,14 +9,38 @@ function DashboardContent({
   briefingCount,
   oneOnOneCount,
   demoMode,
+  guestMode,
 }: {
   teamCount: number | string;
   briefingCount: number | string;
   oneOnOneCount: number | string;
   demoMode: boolean;
+  guestMode: boolean;
 }) {
   return (
     <div className="space-y-6">
+      <section className="sticky top-16 z-20 rounded-xl border border-slate-200 bg-white/95 p-3 shadow-sm backdrop-blur">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">
+            Quick Start Navigation
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/app/daily" className="btn btn-secondary">
+              Daily testen
+            </Link>
+            <Link href="/app/one-on-one" className="btn btn-secondary">
+              1:1 testen
+            </Link>
+            <Link href="/app/templates" className="btn btn-secondary">
+              Templates
+            </Link>
+            <Link href="/app/example" className="btn btn-primary">
+              Beispiel öffnen
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <section className="card-strong relative overflow-hidden">
         <Image
           src="/illustrations/city-grid.svg"
@@ -71,6 +95,68 @@ function DashboardContent({
         <MetricCard label="Daily Briefings" value={briefingCount} />
         <MetricCard label="1:1 Outputs" value={oneOnOneCount} />
       </section>
+
+      {guestMode ? (
+        <section className="card space-y-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+              Ohne Login testen
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#11284c]">
+              Diese Leistungen kannst du sofort ausprobieren
+            </h2>
+          </div>
+          <div className="grid gap-3 md:grid-cols-2">
+            <TrialCard
+              title="Daily Leadership Briefing"
+              description="3 konkrete Führungsaktionen mit Script und Timebox erzeugen."
+              href="/app/daily"
+              cta="Daily testen"
+            />
+            <TrialCard
+              title="1:1 Studio"
+              description="Mit Demo-Teammitgliedern Agenda, Feedback und Follow-ups generieren."
+              href="/app/one-on-one"
+              cta="1:1 testen"
+            />
+            <TrialCard
+              title="Templates Library"
+              description="Vorlagen für Feedback, Delegation, Konflikt und Entwicklung ansehen."
+              href="/app/templates"
+              cta="Templates öffnen"
+            />
+            <TrialCard
+              title="Beispiel-Dokument"
+              description="Ein komplettes Musterergebnis ansehen, bevor du eigene Inputs eingibst."
+              href="/app/example"
+              cta="Beispiel ansehen"
+            />
+          </div>
+          <div className="rounded-xl border border-[#c6dcf9] bg-[#f3f8ff] p-3">
+            <p className="text-sm text-[#1a4270]">
+              Für dauerhafte Speicherung und Team-Historie: beim ersten Teammitglied anmelden.
+            </p>
+          </div>
+        </section>
+      ) : null}
+
+      <section className="grid gap-3 md:grid-cols-3">
+        <MonetizationCard
+          title="Starter"
+          detail="Für 1 Führungskraft, Kernflows und Standard-Templates."
+          hint="Ideal zum Einstieg"
+        />
+        <MonetizationCard
+          title="Team"
+          detail="Mehrere Führungskräfte, gemeinsame Standards und mehr Verlauf."
+          hint="Für wachsende Teams"
+        />
+        <MonetizationCard
+          title="Scale"
+          detail="Strukturierte Führungsprozesse für mehrere Bereiche."
+          hint="Für Organisationen mit Reifegrad"
+        />
+      </section>
     </div>
   );
 }
@@ -84,12 +170,75 @@ function MetricCard({ label, value }: { label: string; value: number | string })
   );
 }
 
+function TrialCard({
+  title,
+  description,
+  href,
+  cta,
+}: {
+  title: string;
+  description: string;
+  href: string;
+  cta: string;
+}) {
+  return (
+    <article className="rounded-2xl border border-slate-200 bg-white p-4">
+      <h3 className="text-base font-semibold text-slate-900">{title}</h3>
+      <p className="mt-2 text-sm text-slate-700">{description}</p>
+      <Link href={href} className="mt-4 inline-flex text-sm font-semibold text-[#0f2a55] underline">
+        {cta}
+      </Link>
+    </article>
+  );
+}
+
+function MonetizationCard({
+  title,
+  detail,
+  hint,
+}: {
+  title: string;
+  detail: string;
+  hint: string;
+}) {
+  return (
+    <article className="rounded-2xl border border-slate-200 bg-white p-4">
+      <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">{hint}</p>
+      <h3 className="mt-2 text-lg font-semibold text-[#11284c]">{title}</h3>
+      <p className="mt-2 text-sm text-slate-700">{detail}</p>
+    </article>
+  );
+}
+
 export default async function DashboardPage() {
   if (isDemoMode()) {
-    return <DashboardContent teamCount="-" briefingCount="-" oneOnOneCount="-" demoMode />;
+    return (
+      <DashboardContent
+        teamCount="-"
+        briefingCount="-"
+        oneOnOneCount="-"
+        demoMode
+        guestMode
+      />
+    );
   }
 
   const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return (
+      <DashboardContent
+        teamCount="-"
+        briefingCount="-"
+        oneOnOneCount="-"
+        demoMode={false}
+        guestMode
+      />
+    );
+  }
 
   const [{ count: teamCount }, { count: briefingCount }, { count: oneOnOneCount }] =
     await Promise.all([
@@ -104,6 +253,7 @@ export default async function DashboardPage() {
       briefingCount={briefingCount ?? 0}
       oneOnOneCount={oneOnOneCount ?? 0}
       demoMode={false}
+      guestMode={false}
     />
   );
 }

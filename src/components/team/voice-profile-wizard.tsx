@@ -80,6 +80,8 @@ export function VoiceProfileWizard({
 
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
   const transcriptBaseRef = useRef<string>("");
+  const autoAdvanceTargetRef = useRef<number | null>(null);
+  const textareasRef = useRef<Array<HTMLTextAreaElement | null>>([]);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const rafIdRef = useRef<number | null>(null);
@@ -166,11 +168,34 @@ export function VoiceProfileWizard({
     rafIdRef.current = requestAnimationFrame(update);
   }
 
-  function stopRecognition() {
+  function getNextQuestionIndex(currentIndex: number): number | null {
+    for (let index = currentIndex + 1; index < QUESTIONS.length; index += 1) {
+      if (answers[index].trim().length === 0) {
+        return index;
+      }
+    }
+    return null;
+  }
+
+  function stopRecognition(options?: { autoAdvance?: boolean }) {
+    const activeIndex = recordingIndex;
+    const shouldAutoAdvance = Boolean(options?.autoAdvance && activeIndex !== null);
+    autoAdvanceTargetRef.current =
+      shouldAutoAdvance && activeIndex !== null ? getNextQuestionIndex(activeIndex) : null;
+
     if (recognitionRef.current) {
       recognitionRef.current.stop();
       recognitionRef.current = null;
+    } else if (autoAdvanceTargetRef.current !== null) {
+      const nextIndex = autoAdvanceTargetRef.current;
+      autoAdvanceTargetRef.current = null;
+      setTimeout(() => {
+        const textarea = textareasRef.current[nextIndex];
+        textarea?.focus();
+        void startRecognition(nextIndex);
+      }, 120);
     }
+
     cleanupAudioMeter();
     setRecordingIndex(null);
   }
@@ -235,6 +260,15 @@ export function VoiceProfileWizard({
       recognitionRef.current = null;
       cleanupAudioMeter();
       setRecordingIndex(null);
+      const nextIndex = autoAdvanceTargetRef.current;
+      autoAdvanceTargetRef.current = null;
+      if (nextIndex !== null) {
+        setTimeout(() => {
+          const textarea = textareasRef.current[nextIndex];
+          textarea?.focus();
+          void startRecognition(nextIndex);
+        }, 120);
+      }
     };
 
     recognition.onerror = () => {
@@ -258,7 +292,7 @@ export function VoiceProfileWizard({
 
   async function toggleRecording(questionIndex: number) {
     if (recordingIndex === questionIndex) {
-      stopRecognition();
+      stopRecognition({ autoAdvance: true });
       return;
     }
 
@@ -403,6 +437,9 @@ export function VoiceProfileWizard({
 
                 <textarea
                   className="input mt-2 min-h-20"
+                  ref={(element) => {
+                    textareasRef.current[index] = element;
+                  }}
                   value={answers[index]}
                   onChange={(event) => {
                     const value = event.target.value;

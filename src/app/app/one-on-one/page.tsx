@@ -30,12 +30,12 @@ function OneOnOneHeader() {
 }
 
 export default async function OneOnOnePage() {
-  if (isDemoMode()) {
-    const demoMembers: TeamMember[] = [
-      { id: "demo-1", name: "Alex", role: "Product Manager" },
-      { id: "demo-2", name: "Sam", role: "Engineer" },
-    ];
+  const demoMembers: TeamMember[] = [
+    { id: "demo-1", name: "Alex", role: "Product Manager" },
+    { id: "demo-2", name: "Sam", role: "Engineer" },
+  ];
 
+  if (isDemoMode()) {
     return (
       <div className="space-y-6">
         <OneOnOneHeader />
@@ -45,6 +45,23 @@ export default async function OneOnOnePage() {
   }
 
   const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return (
+      <div className="space-y-6">
+        <OneOnOneHeader />
+        <div className="card border-teal-200 bg-teal-50 text-teal-900">
+          Try-Out aktiv: Du kannst das 1:1 Studio mit Demo-Teammitgliedern testen. Login erst
+          nötig, wenn du echte Teamdaten speichern willst.
+        </div>
+        <OneOnOneStudio teamMembers={demoMembers} />
+      </div>
+    );
+  }
+
   const { data: teamMembers } = await supabase
     .from("team_members")
     .select("id, name, role")
