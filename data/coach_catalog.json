@@ -1,0 +1,38 @@
+[
+  {
+    "id": "coach-001",
+    "displayName": "Coach A",
+    "tags": ["führung", "teamkonflikt", "feedback"],
+    "intensity": ["clear", "balanced"],
+    "formats": ["remote", "hybrid"],
+    "availability": "nächste Woche",
+    "responseSlaHours": 8
+  },
+  {
+    "id": "coach-002",
+    "displayName": "Coach B",
+    "tags": ["selbstmanagement", "führung", "change"],
+    "intensity": ["soft", "balanced"],
+    "formats": ["remote", "onsite", "hybrid"],
+    "availability": "diese Woche",
+    "responseSlaHours": 24
+  },
+  {
+    "id": "coach-003",
+    "displayName": "Coach C",
+    "tags": ["teamkonflikt", "change", "feedback"],
+    "intensity": ["clear"],
+    "formats": ["onsite", "hybrid"],
+    "availability": "ab nächster Woche",
+    "responseSlaHours": 12
+  },
+  {
+    "id": "coach-004",
+    "displayName": "Coach D",
+    "tags": ["führung", "selbstmanagement"],
+    "intensity": ["soft"],
+    "formats": ["remote"],
+    "availability": "flexibel",
+    "responseSlaHours": 36
+  }
+]

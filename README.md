@@ -1,136 +1,111 @@
-# LeadOS MVP
+# Coaching-Vermittlungsplattform Prototyp (Funke)
 
-Erster lauffähiger MVP-Prototyp für eine KMU-Führungs-App mit:
+Lauffähiger Next.js-Prototyp für sichere Triage, Matching, Plattform-Erstkontakt, Buchungsbestätigung und PE-Entlastung.
+
+## Stack
 - Next.js (App Router) + TypeScript
-- TailwindCSS (minimal)
-- Supabase (Auth + Postgres + RLS)
-- Zod für strikte JSON-Schema-Validation
-- AI-Service mit Mock-Fallback
-
-## Voraussetzungen
-- Node.js 20+
-- npm 10+
-- Supabase Projekt
+- Zod für Validierung
+- Storage-Abstraktion: InMemory oder FileStorage (JSON, Default)
+- Keine externe Auth (Rollen-Simulation: Leader/Coach/PE)
 
 ## Setup
-### Option A: Ohne Backend testen (empfohlen für schnellen Demo-Check)
-1. Dependencies installieren:
-```bash
-npm install
-```
-2. Environment anlegen:
-```bash
-cp .env.example .env.local
-```
-3. In `.env.local` setzen:
-- `NEXT_PUBLIC_DEMO_MODE=true`
-- `AI_MODE=mock`
-4. Starten:
-```bash
-npm run dev
-```
+1. Node.js 20+ verwenden.
+2. Abhängigkeiten installieren:
+   ```bash
+   npm install
+   ```
+3. Dev-Server starten:
+   ```bash
+   npm run dev
+   ```
+4. App öffnen: [http://localhost:3000](http://localhost:3000)
 
-### Option B: Mit Supabase (voller Persistenz-Flow)
-1. Dependencies installieren:
-```bash
-npm install
-```
+## Konfiguration
+- `STORAGE_DRIVER=file|memory` (Default: `file`)
+- `ENABLE_LLM_PROVIDER=true|false` (Default: `false`)
+- `LLM_API_KEY=...` (optional, nur wenn Hook aktiv sein soll)
 
-2. Environment anlegen:
-```bash
-cp .env.example .env.local
-```
+Hinweis: Der LLM-Hook ist standardmäßig deaktiviert und macht ohne API-Key keine externen Calls.
 
-3. `.env.local` befüllen:
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `NEXT_PUBLIC_DEMO_MODE=false`
-- `AI_MODE=mock` (empfohlen für lokale Demo ohne Key)
-- Optional: `AI_MODE=live`, `AI_API_KEY`, `AI_MODEL`
+## Rollen und Flows
 
-4. Supabase Migration ausführen:
-- Datei: `supabase/migrations/001_init.sql`
-- Inhalte im SQL Editor ausführen oder per CLI migrieren.
+### Leader
+1. Anliegen im Chat senden.
+2. Assistent liefert Text + `---JSON---` Maschinenblock im festen Schema.
+3. Bei Coaching-Bedarf: Top-3 Empfehlungen.
+4. Plattform-Nachricht an Coach senden.
+5. Buchungsvorschlag (200 EUR/h) mit Terminen erstellen.
+6. Leader-Bestätigung erfolgt beim Erstellen der Buchung automatisch.
 
-5. Dev Server starten:
-```bash
-npm run dev
-```
+### Coach
+1. Eingehende Plattform-Nachricht sehen.
+2. Anfrage annehmen oder ablehnen.
+3. Bei Buchung: zweite Bestätigung (Dual-Confirmation) ausführen.
 
-## Commands
-```bash
-npm run dev
-npm run lint
-npm run test
-npm run build
-```
+### PE
+1. Dashboard öffnen.
+2. Nur Metadaten sehen (keine Gesprächsinhalte):
+   - Status
+   - Timestamps
+   - Anzahl Nachfragen
+   - coaching_needed
+   - ausgewählte Coach-IDs
+   - Buchungsstatus
+   - geschätzte PE-Zeitersparnis
 
-## Implementierte User-Flows
-1. Auth Flow
-- `/auth`: Sign up / Sign in
-- Nach Login Redirect auf `/onboarding` falls Profil fehlt, sonst `/app`
+## API-Routen
+- `POST /api/chat` - Triage, Nachfragen, Self-Help, Empfehlungen
+- `POST /api/matching` - Direktes Matching auf Basis Präferenzen
+- `GET/POST/PATCH /api/messaging` - Erstkontakt erstellen, annehmen/ablehnen
+- `GET/POST/PATCH /api/booking` - Buchungsvorschlag und Dual-Confirmation
+- `GET /api/reporting/pe` - PE-Reporting (nur Metadaten)
+- `GET /api/coaches` - Coach-Katalog
+- `GET /api/cases` - Fallliste (debug/UI)
 
-2. Onboarding
-- `/onboarding`: Rolle, Branche, Teamgröße, Team-Setup, Tonpräferenz
-- Speichert in `profiles`
+## Datenschutz-Notizen
+- Datenschutz-Reminder wird in jedem Chat-Output angezeigt.
+- Eingaben werden vor der Verarbeitung abstrahiert (PII-Reduktion).
+- Keine privaten Kontaktdatenfreigaben außerhalb der Plattform.
+- Keine Gesundheitsdatenverarbeitung.
+- Eskalationsfälle (Krise, Selbst-/Fremdgefährdung, Compliance/Recht, Datenschutzrisiko) werden an PE/geeignete Stelle übergeben; keine Detailspeicherung.
+- PE-Reporting enthält keine Gesprächsinhalte.
 
-3. Dashboard
-- `/app`: KPI-Karten (Teammitglieder, Daily Briefings, 1:1 Outputs)
+## Akzeptanzkriterien und UI-Test
 
-4. Teamverwaltung + Private Notes
-- `/app/team`
-- Teammitglied erstellen/bearbeiten (`team_members`)
-- Private Kurznotiz pro Mitglied (`notes_private`)
-- Notizen pro Mitglied speichern/anzeigen (`notes`)
+1. **Leader → Empfehlung → Nachricht → Coach akzeptiert → Booking vorgeschlagen → beide bestätigen**
+   1. Rolle `Leader`: Anliegen mit Coaching-Bedarf senden (z. B. Teamkonflikt, hoher Druck).
+   2. `Nachricht an Coach senden` klicken.
+   3. Rolle `Coach`: Anfrage `Annehmen`.
+   4. Rolle `Leader`: `Buchung vorschlagen`.
+   5. Rolle `Coach`: `Coach bestätigt`.
+   6. Optional Rolle `PE`: Report prüfen (Status/Buchungsstatus aktualisiert).
 
-5. Daily Leadership Briefing
-- `/app/daily`
-- Input: Wochenziel, Herausforderung, Ton, Kontext
-- API: `POST /api/ai/daily-briefing`
-- Ausgabe: max. 3 Aktionen + Watchouts + Copy-Buttons
-- Persistenz: `daily_briefings.output_json`
+2. **Leader → Self-Help → Coaching entfällt**
+   1. Rolle `Leader`: Anliegen wie „nur kurzer Impuls, ich möchte es selbst lösen" senden.
+   2. JSON zeigt `phase=self_help`, 2-4 Tipps und `coaching_needed=no`.
 
-6. 1:1 Studio
-- `/app/one-on-one`
-- Teammitglied auswählen, Ziel/Kontext/Ton eingeben
-- API: `POST /api/ai/one-on-one`
-- Ausgabe: Agenda + Feedback-Skript + Follow-ups
-- Persistenz: `one_on_ones.output_json`
+3. **Eskalation → Handoff an PE mit Grund**
+   1. Rolle `Leader`: kritischen Text mit Selbst-/Fremdgefährdung oder Compliance-/Rechtsrisiko senden.
+   2. JSON zeigt `handoff_to_human.required=true` mit Grund.
+   3. Rolle `PE`: Metadaten-Fall mit Handoff sichtbar.
 
-7. Templates Library
-- `/app/templates`
-- 20 statische Templates aus `src/data/templates.json`
-- Filter: Feedback / Delegation / Konflikt / Entwicklung
-- Detailansicht mit Situation, Ziel, Fragen, Beispiel-Sätzen, Follow-ups
+## Projektstruktur
+- `src/app` - UI und Route Handler
+- `src/lib/assistant` - rule-based Assistentenlogik
+- `src/lib/domain` - Typen, Matching, Privacy, Service-Orchestrierung
+- `src/lib/storage` - Storage-Interface + InMemory/FileStorage
+- `assistant_policy.md` - Triage/Matching-Regeln
+- `data/coach_catalog.json` - Beispiel-Coach-Katalog
+- `data/app_storage.json` - lokaler Persistenzzustand
 
-## AI-Modi
-- `NEXT_PUBLIC_DEMO_MODE=true`:
-  - Kein Auth-/DB-Backend notwendig
-  - Teamdaten bleiben lokal in der UI
-  - AI-Routen laufen ohne Login und ohne Persistenz
+## Annahmen
+- Identitäten sind Demo-IDs (`leader-demo`, `coach-001` ...).
+- Leader-Buchung gilt als erste Bestätigung beim Erstellen.
+- Keine Kalenderintegration; Terminvorschläge sind ISO-Strings.
+- Kein separates Rechte-/Mandantenmodell im Prototyp.
 
-- `AI_MODE=mock`:
-  - Deterministische Antworten ohne externen API-Key
-  - Immer schema-validiert via Zod
-
-- `AI_MODE=live` + `AI_API_KEY`:
-  - Versuch eines echten Modell-Calls
-  - Bei Fehlern automatischer Fallback auf Mock
-
-## Tests
-Enthalten sind mindestens 3 geforderte Tests:
-1. Unit: Zod Schema Validation (`tests/unit/schemas.test.ts`)
-2. Integration: API Happy Path (`tests/integration/daily-briefing-route.test.ts`)
-3. Integration: API Unauthorized (`tests/integration/daily-briefing-route.test.ts`)
-
-## Wichtige Dateien
-- AI-Service: `src/lib/ai.ts`
-- Zod-Schemas: `src/lib/schemas.ts`
-- API-Routen:
-  - `src/app/api/ai/daily-briefing/route.ts`
-  - `src/app/api/ai/one-on-one/route.ts`
-- Supabase Clients:
-  - `src/lib/supabase/client.ts`
-  - `src/lib/supabase/server.ts`
-  - `src/lib/supabase/middleware.ts`
-- SQL Migration: `supabase/migrations/001_init.sql`
+## Nächste Schritte
+- Echte rollenbasierte AuthN/AuthZ ergänzen.
+- Audit-Log und feinere Datenschutzklassifikation einführen.
+- Optionalen LLM-Provider mit strukturiertem Prompting und Guardrails erweitern.
+- Persistenzadapter für SQLite implementieren.

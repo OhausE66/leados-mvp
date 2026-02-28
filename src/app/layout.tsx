@@ -1,20 +1,15 @@
-import type { Metadata } from "next";
-
 import "./globals.css";
+import { ReactNode } from "react";
 
-export const metadata: Metadata = {
-  title: "LeadOS",
-  description: "KMU Leadership Copilot MVP",
+export const metadata = {
+  title: "Coaching Vermittlung Prototyp",
+  description: "Rule-based Triage, Matching, Messaging und Booking",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="de">
-      <body className="antialiased">{children}</body>
+      <body>{children}</body>
     </html>
   );
 }
